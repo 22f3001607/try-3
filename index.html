@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>try-3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="file"] {
+            margin: 20px 0;
+        }
+        canvas {
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Compressor</h1>
+    <input type="file" id="upload" accept="image/*">
+    <canvas id="canvas"></canvas>
+    <button id="compressBtn">Compress Image</button>
+    <script>
+        document.getElementById('upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.getElementById('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        canvas.style.display = 'block';
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('compressBtn').addEventListener('click', function() {
+            const canvas = document.getElementById('canvas');
+            const compressedImage = canvas.toDataURL('image/jpeg', 0.5);
+            const link = document.createElement('a');
+            link.href = compressedImage;
+            link.download = 'compressed_image.jpg';
+            link.click();
+        });
+    </script>
+</body>
+</html>
